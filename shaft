@@ -1,0 +1,19 @@
+#!/bin/bash
+
+util="$1"
+bin=`dirname $0`"/bin/"$1
+shift 1;
+
+if [ -z "${util}" ]; then
+  echo "No command" >&2;
+  exit 1
+fi
+
+if [ -f $bin ]; then
+  ${bin} $@;
+elif [ -f ${bin}.sh ]; then
+  ${bin}.sh $@;
+else
+  echo "Command ${util} not found" >&2
+  exit 1
+fi
