@@ -14,7 +14,6 @@
     "type" : "git",
     "url"  : "http://github.com/rumkin/shaft-js.git"
   },
-  "repository": "",
   "keywords": [
     "mvc",
     "http",
