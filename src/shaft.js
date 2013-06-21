@@ -55,6 +55,8 @@ function Shaft(config) {
 	this.config       = config;
 	this._emitter     = new emitter;
 	this._controllers = {};
+	this.started      = false;
+	this._services    = {};
 }
 
 // EVENTS ---------------------------------------------------------------------
@@ -86,6 +88,7 @@ Shaft.prototype.trigger = function(event, arg) {
 // USAGE ----------------------------------------------------------------------
 
 Shaft.prototype.start = function(configure) {
+	this.started = true;
 	this.initControllers();
 	this.initServices();
 	this.trigger('init');
@@ -125,27 +128,51 @@ Shaft.prototype.initServices = function() {
 
 		if (options === false) continue;
 
-		if (options.hasOwnProperty('service')) {
-			service = options.service;
-		} else {
-			service = name;
-		}
-
-		service = require(path.join(this.config.basedir, this.config.service_dir, service));
-		if (typeof service === 'object') {
-			service = createService(service);
-		}
-
-		if (typeof options === 'boolean') {
-			options = {};
-		}
-
-		options      = extend({}, options);
-		options._name = name;
-
-		this[name] = new service(this, options);
+		this.initService(name, options);
 	}
 
+};
+
+Shaft.prototype.service = function(name, options, callback) {
+	if (this._services.hasOwnProperty(name)) {
+		throw new Error('Service ' + name + ' already initiated');
+	}
+
+	if (typeof options === 'function') {
+		callback = options;
+		options  = true;
+	}
+
+	if (typeof callback === 'function') {
+		this.once(name + '.init', callback);
+	}
+
+	if (this.started) {
+		this.initService(name, options);
+	} else {
+		this.config.services[name] = options;
+	}
+};
+
+Shaft.prototype.initService = function(name, options) {
+	var type, location, service;
+	
+	type     = options.service || name;
+	location = path.join(this.config.basedir, this.config.service_dir, type);
+	service  = require(location);
+
+	if (typeof service === 'object') {
+		service = createService(service);
+	}
+
+	if (typeof options === 'boolean') {
+		options = {}
+	}
+
+	options._name = name;
+
+	this._services[name] = true;
+	this[name] = new service(this, options);
 };
 
 Shaft.prototype.initServer = function(configure) {
@@ -205,8 +232,6 @@ Shaft.prototype.onNotFound = function(req, res, next) {
 
 Shaft.prototype.onError = function(err, req, res, next) {
 	this.trigger('error', err);
-	// TODO: Error processing
-	console.log('Error');
 	next(err);
 };
 
