@@ -1,0 +1,21 @@
+{
+  "name": "shaft-js",
+  "version": "0.1.0",
+  "description": "Shaft is pure, simple and lightweight express-based MVC framework",
+  "main": "src/shaft.js",
+  "scripts": {
+    "test": "node tests/main.js"
+  },
+  "dependencies" : {
+    "jade"   : "*",
+    "lodash" : "*"
+  },
+  "repository": "",
+  "keywords": [
+    "mvc",
+    "http",
+    "server"
+  ],
+  "author": "rumkin",
+  "license": "BSD"
+}
