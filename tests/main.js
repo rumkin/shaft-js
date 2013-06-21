@@ -7,25 +7,23 @@ var app = Shaft.create({
 	controllers : 'controllers',
 	statics     : 'ui:public',
 	service_dir : 'services',
-	services    : {
-		jade : true
-	}
+	services    : {}
 });
 
-app.on('jade.init', function(jade) {
-	console.log('Jade initialization event fired');
+app.service('jade', function(jade){
+	console.log('Jade initiated');
 });
 
 app.start({
 	development : function(app, express) {
-
+		console.log('Configure express in development mode');
 	},
 
 	production : function(app, express) {
-
+		console.log('Configure express in production mode');
 	}
 });
 
 app.on('error', function(err) {
-	console.log('Error', err);
+	console.error('Error', err);
 });
