@@ -145,7 +145,6 @@ Shaft.prototype.initServices = function() {
 
 		this[name] = new service(this, options);
 	}
-
 };
 
 Shaft.prototype.initServer = function(configure) {
@@ -159,7 +158,7 @@ Shaft.prototype.initServer = function(configure) {
 	while (statics.length) {
 		dir = statics.shift();
 		if (dir.charAt(0) !== '/') {
-			dir = path.join(__dirname, dir);
+			dir = path.join(this.config.basedir, dir);
 		}
 		server.use(express.static(dir));
 	}
