@@ -11,4 +11,4 @@ if [ ! -d "${dir}" ]; then
   exit 1;
 fi
 
-cp -R "$dir/*" .
+cp -R $dir/* .
