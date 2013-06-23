@@ -13,7 +13,7 @@ var app = Shaft.create({
 });
 
 app.on('jade.init', function(jade) {
-	console.log('Jade initialization event fired');
+	console.log('jade is ready!!!');
 });
 
 app.start({

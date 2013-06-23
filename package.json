@@ -4,7 +4,8 @@
   "description": "Shaft is pure, simple and lightweight express-based MVC framework",
   "main": "src/shaft.js",
   "scripts": {
-    "test": "node tests/main.js"
+    "test"    : "node tests/main.js",
+    "install" : "bash bin/install.sh"
   },
   "dependencies" : {
     "express": "*",
@@ -15,7 +16,6 @@
     "type" : "git",
     "url"  : "http://github.com/rumkin/shaft-js.git"
   },
-  "repository": "",
   "keywords": [
     "mvc",
     "http",
