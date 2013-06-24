@@ -2,12 +2,6 @@ var Shaft = require('../src/shaft');
 
 var app = Shaft.create({
 	mode        : 'development',
-	basedir     : __dirname,
-	views       : 'views',
-	controllers : 'controllers',
-	statics     : 'ui:public',
-	service_dir : 'services',
-	services    : {},
 	dirs : {
 		root  : __dirname,
 		views : 'views'
