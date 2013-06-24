@@ -1,0 +1,8 @@
+{
+  "name"    : "App",
+  "description" : "Default web application",
+  "version" : "0.1.0",
+  "dependencies" : {
+    "node-getopt" : "*"
+  }
+}
