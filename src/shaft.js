@@ -2,7 +2,7 @@ var express = require('express');
 var emitter = require('events').EventEmitter;
 var path    = require('path');
 var fs      = require('fs');
-var jade    = require('fs');
+var _       = require('blank-js');
 
 // UTILS ----------------------------------------------------------------------
 
@@ -52,11 +52,24 @@ function collectJsFiles(dir, callback) {
 
 
 function Shaft(config) {
-	this.config       = config;
+	this.config       = _.merge({}, this.config, config);
 	this._emitter     = new emitter;
 	this._controllers = {};
 	this.started      = false;
 	this._services    = {};
+}
+
+Shaft.prototype.config = {
+	mode        : 'development',
+	dirs        : {
+		root        : path.dirname(require.main),
+		controllers : 'controllers',
+		services    : 'services',
+		statics     : ['ui','public']
+	},
+	services    : {
+		jade : true
+	}
 }
 
 // EVENTS ---------------------------------------------------------------------
@@ -99,7 +112,7 @@ Shaft.prototype.start = function(configure) {
 Shaft.prototype.initControllers = function() {
 	var dir, files, file, filepath, controller, ext, name;
 
-	dir = path.join(this.config.basedir, this.config.controllers);
+	dir = path.join(this.config.dirs.root, this.config.dirs.controllers);
 	files = fs.readdirSync(dir);
 
 	while (files.length) {
@@ -183,13 +196,12 @@ Shaft.prototype.findService = function(name) {
 	var locations, location;
 
 	locations = [
-		path.join(this.config.basedir, this.config.service_dir, name + '.js'),
+		path.join(this.config.dirs.root, this.config.dirs.services, name + '.js'),
 		path.join(__dirname, 'services', name + '.js')
 	];
 
 	while (locations.length) {
 		location = locations.shift();
-		console.log(location);
 		if (fs.existsSync(location)) return location;
 	}
 
@@ -201,13 +213,16 @@ Shaft.prototype.initServer = function(configure) {
 
 	config = this.config;
 	server = express();
+	statics = config.dirs.statics;
 
-	statics = config.statics.split(':');
+	if (typeof statics === 'string') {
+		statics = statics.split(':');
+	}
 
 	while (statics.length) {
 		dir = statics.shift();
 		if (dir.charAt(0) !== '/') {
-			dir = path.join(this.config.basedir, dir);
+			dir = path.join(config.dirs.root, dir);
 		}
 		server.use(express.static(dir));
 	}

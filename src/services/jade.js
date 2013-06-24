@@ -30,7 +30,7 @@ module.exports = {
 			try {
 				compiled  = jade.compile(data.toString(), this.options);
 				variables = this._extend({}, this._helpers, variables, {
-					basedir : this.app.config.basedir + '/' + this.app.config.views
+					basedir : this.app.config.dirs.root + '/' + this.app.config.dirs.views
 				});
 
 				html = compiled(variables);

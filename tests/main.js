@@ -7,7 +7,11 @@ var app = Shaft.create({
 	controllers : 'controllers',
 	statics     : 'ui:public',
 	service_dir : 'services',
-	services    : {}
+	services    : {},
+	dirs : {
+		root  : __dirname,
+		views : 'views'
+	}
 });
 
 app.service('jade', function(jade){
