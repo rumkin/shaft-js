@@ -11,6 +11,6 @@ TODO (v 0.1)
 * request incapsultation object
 * ~~controller events emitters~~
 * ~~configuration object extending~~
-* event script folder
+* ~~event script folder~~
 * ~~build in jade render engine~~
 * ~~add working project to examples~~

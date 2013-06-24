@@ -72,7 +72,8 @@ Shaft.prototype.config = {
 		root        : path.dirname(require.main),
 		controllers : 'controllers',
 		services    : 'services',
-		statics     : ['ui','public']
+		statics     : ['ui','public'],
+		events      : 'events',
 	},
 	services    : {
 		jade : true
@@ -110,6 +111,7 @@ Shaft.prototype.trigger = function(event, arg) {
 Shaft.prototype.start = function(configure) {
 	this.started = true;
 	this.initControllers();
+	this.initEvents();
 	this.initServices();
 	this.trigger('init');
 	this.initServer(configure);
@@ -122,6 +124,7 @@ Shaft.prototype.initControllers = function() {
 	dir = path.join(this.config.dirs.root, this.config.dirs.controllers);
 	files = fs.readdirSync(dir);
 
+	
 	while (files.length) {
 		file = files.shift();
 		ext  = path.extname(file);
@@ -136,6 +139,33 @@ Shaft.prototype.initControllers = function() {
 		}
 
 		this._controllers[name] = controller;
+	}
+};
+
+Shaft.prototype.initEvents = function() {
+	var config, dir, files, file, event, stat, ext, name;
+
+	config = this.config;
+
+	dir   = path.join(config.dirs.root, config.dirs.events);
+	if ( ! fs.existsSync(dir)) return;
+
+	files = fs.readdirSync(dir);
+
+	while (files.length) {
+		file = files.shift();
+		ext  = path.extname(file);
+
+		if (ext !== '.js') continue;
+
+		name  = file.substr(0, file.length - ext.length);
+		event = require(path.join(dir, file));
+		
+		if (typeof event !== 'function') {
+			throw new Error('Event file "' + name + '" returns no function');
+		}
+
+		this.on(name, event);
 	}
 };
 
