@@ -5,7 +5,12 @@ var app = Shaft.create({
 	dirs : {
 		root  : __dirname,
 		views : 'views'
-	}
+	},
+	defaultController : Shaft.createController({
+		defaultControllerAction : function() {
+			console.log('Hello there!');
+		}
+	})
 });
 
 app.service('jade', function(jade){
