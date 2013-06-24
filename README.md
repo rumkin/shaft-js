@@ -1,14 +1,7 @@
 Shaft.js
 ====
 
-Shaft is pure, simple and lightweight express-based MVC framework
+Shaft is pure, simple and lightweight express-based event-driven MVC framework
 
-
-TODO (v 0.1)
----
-* ~~default controller object~~
-* ~~controller events emitters~~
-* ~~configuration object extending~~
-* ~~event script folder~~
-* ~~build in jade render engine~~
-* ~~add working project to examples~~
+### TODO
+See [TODO](wiki/TODO) list to track changes by version.
