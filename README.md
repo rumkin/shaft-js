@@ -13,4 +13,4 @@ TODO (v 0.1)
 * ~~configuration object extending~~
 * event script folder
 * ~~build in jade render engine~~
-* add working project to examples
+* ~~add working project to examples~~
