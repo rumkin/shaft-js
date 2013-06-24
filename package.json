@@ -8,7 +8,7 @@
     "install" : "bash bin/install.sh"
   },
   "dependencies" : {
-    "blank-js" : "*"  
+    "blank-js" : "*",
     "express": "*",
     "jade"   : "*",
     "lodash" : "*"
