@@ -379,6 +379,14 @@ ShaftController.prototype.onRender = function(err, html) {
 // response
 
 ShaftController.prototype.response = function(response) {
+	if (typeof response === 'string') {
+		response = {
+			status      : 200,
+			contentType : 'text/html',
+			response    : response
+		};
+	}
+
 	this.trigger('response', response);
 }
 
