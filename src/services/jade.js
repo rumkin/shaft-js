@@ -18,7 +18,7 @@ module.exports = {
 	render : function(file, variables, callback) {
 		var filename;
 
-		filename = path.join(this.app.config.basedir, this.app.config.views, file + '.jade');
+		filename = path.join(this.app.config.dirs.root, this.app.config.dirs.views, file + '.jade');
 		fs.readFile(filename, 'utf8', function (err, data){
 			if (err) return callback(err);
 
