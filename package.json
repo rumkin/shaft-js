@@ -8,9 +8,10 @@
     "install" : "bash bin/install.sh"
   },
   "dependencies" : {
-    "jade"     : "*",
-    "lodash"   : "*",
     "blank-js" : "*"  
+    "express": "*",
+    "jade"   : "*",
+    "lodash" : "*"
   },
   "repository" : {
     "type" : "git",

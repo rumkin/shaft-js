@@ -1,4 +1,4 @@
-var Shaft = require(__dirname + '/../src/shaft.js');
+var Shaft = require('shaft-js');
 
 var app = Shaft.create({
 	mode        : 'development',
@@ -12,8 +12,15 @@ var app = Shaft.create({
 	}
 });
 
-app.start();
+app.on('jade.init', function(jade) {
+	console.log('Jade is ready!');
+});
+
+app.start({
+	development : function(app, express) { },
+	production  : function(app, express) { }
+});
 
 app.on('error', function(err) {
-	console.log('Error', err);
+	console.error('Error', err);
 });
