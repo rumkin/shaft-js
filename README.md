@@ -6,9 +6,7 @@ Shaft is pure, simple and lightweight express-based MVC framework
 
 TODO (v 0.1)
 ---
-* render engine interface
-* independant http engine support
-* request incapsultation object
+* ~~default controller object~~
 * ~~controller events emitters~~
 * ~~configuration object extending~~
 * ~~event script folder~~

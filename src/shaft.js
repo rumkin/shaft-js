@@ -77,7 +77,8 @@ Shaft.prototype.config = {
 	},
 	services    : {
 		jade : true
-	}
+	},
+	defaultController : ShaftController
 }
 
 // EVENTS ---------------------------------------------------------------------
@@ -135,7 +136,7 @@ Shaft.prototype.initControllers = function() {
 		controller = require(dir + '/' + file);
 
 		if (typeof controller === 'object') {
-			controller = createController(controller);
+			controller = createController(controller, this.config.defaultController);
 		}
 
 		this._controllers[name] = controller;
@@ -160,7 +161,7 @@ Shaft.prototype.initEvents = function() {
 
 		name  = file.substr(0, file.length - ext.length);
 		event = require(path.join(dir, file));
-		
+
 		if (typeof event !== 'function') {
 			throw new Error('Event file "' + name + '" returns no function');
 		}
@@ -430,7 +431,9 @@ ShaftController.prototype.response = function(response) {
 ShaftController.prototype.onInit        = function() {};
 ShaftController.prototype.beforeRequest = function() {};
 
-function createController (controller) {
+function createController (controller, defaultController) {
+	if ( ! defaultController) defaultController = ShaftController;
+	
 	var fn = function(app) {
 		this.app      = app;
 		this._emitter = new emitter;
@@ -439,7 +442,7 @@ function createController (controller) {
 		this.trigger('init');
 	};
 
-	fn.prototype.__proto__ = ShaftController.prototype;
+	fn.prototype.__proto__ = defaultController.prototype;
 
 	for (var prop in controller) {
 		fn.prototype[prop] = controller[prop];
@@ -489,4 +492,5 @@ module.exports.create = function(config) {
 	return new Shaft(config);
 };
 
-module.exports.controller = createController;
+module.exports.controller       = ShaftController;
+module.exports.createController = createController;
