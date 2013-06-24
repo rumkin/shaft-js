@@ -12,5 +12,5 @@ TODO (v 0.1)
 * ~~controller events emitters~~
 * ~~configuration object extending~~
 * event script folder
-* build in jade render engine
+* ~~build in jade render engine~~
 * add working project to examples
