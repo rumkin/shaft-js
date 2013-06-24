@@ -158,7 +158,11 @@ Shaft.prototype.initService = function(name, options) {
 	var type, location, service;
 	
 	type     = options.service || name;
-	location = path.join(this.config.basedir, this.config.service_dir, type);
+	location = this.findService(type);
+	if ( ! location) {
+		throw new Error('Service ' + name + ' not found');
+	}
+
 	service  = require(location);
 
 	if (typeof service === 'object') {
@@ -173,6 +177,23 @@ Shaft.prototype.initService = function(name, options) {
 
 	this._services[name] = true;
 	this[name] = new service(this, options);
+};
+
+Shaft.prototype.findService = function(name) {
+	var locations, location;
+
+	locations = [
+		path.join(this.config.basedir, this.config.service_dir, name + '.js'),
+		path.join(__dirname, 'services', name + '.js')
+	];
+
+	while (locations.length) {
+		location = locations.shift();
+		console.log(location);
+		if (fs.existsSync(location)) return location;
+	}
+
+	return;
 };
 
 Shaft.prototype.initServer = function(configure) {
