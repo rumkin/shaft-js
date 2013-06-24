@@ -4,6 +4,7 @@ var path    = require('path');
 var fs      = require('fs');
 var _       = require('blank-js');
 
+
 // UTILS ----------------------------------------------------------------------
 
 function extend(target, source) {
@@ -18,7 +19,7 @@ function extend(target, source) {
 	}
 
 	return target;
-}
+};
 
 function collectJsFiles(dir, callback) {
 	var result, files, file, filename, ext, stat;
@@ -44,7 +45,13 @@ function collectJsFiles(dir, callback) {
 	}
 
 	return result;
-}
+};
+
+function toCamelCase (str) {
+	return str.replace(/[-_](.)/, function(v) {
+		return v[1].toUpperCase();
+	});
+};
 
 // ----------------------------------------------------------------------------
 //	SHAFT
@@ -260,6 +267,10 @@ Shaft.prototype.onRequest = function(req, res, next) {
 
 	controller = new controllers[call.controller](this);
 	controller.request(call, req, res, next);
+	controller.on('response', function(response) {
+		res.contentType(response.contentType);
+		res.send(response.response);
+	});
 };
 
 Shaft.prototype.onNotFound = function(req, res, next) {
@@ -299,17 +310,20 @@ function convertRequest (req) {
 	};
 };
 
-function toCamelCase (str) {
-	return str.replace(/[-_](.)/, function(v) {
-		return v[1].toUpperCase();
-	});
-};
-
 // DEFAULT CONTROLLER ---------------------------------------------------------
 
 function ShaftController(shaft) {
 	this.app = shaft;
+	this._emitter = new emitter;
 }
+// EVENTS EMITTER -------------------------------------------------------------
+
+ShaftController.prototype.on      = Shaft.prototype.on;
+ShaftController.prototype.off     = Shaft.prototype.off;
+ShaftController.prototype.once    = Shaft.prototype.once;
+ShaftController.prototype.trigger = Shaft.prototype.trigger;
+
+// REQUEST METHODS ------------------------------------------------------------
 
 ShaftController.prototype.request = function(call, req, res, next) {
 	var action, method, methods;
@@ -346,29 +360,43 @@ ShaftController.prototype.render = function(view, data, callback) {
 
 	data = extend({}, this.vars, data);
 	this.app.jade.render(view, data, callback);
-}
+};
+
 
 ShaftController.prototype.onRender = function(err, html) {
 	if (err) {
+		this.trigger('error', err);
 		return this.next(err);
 	}
 
-	this.res.end(html);
+	this.trigger('response', { status : 200, contentType : 'text/html', response : html });
 };
+
+// Arguments:
+// status, type, text
+// type, text (status=200)
+// text
+// response
+
+ShaftController.prototype.response = function(response) {
+	this.trigger('response', response);
+}
 
 ShaftController.prototype.onInit        = function() {};
 ShaftController.prototype.beforeRequest = function() {};
 
 function createController (controller) {
 	var fn = function(app) {
-		this.app  = app;
-		this.vars = {};
+		this.app      = app;
+		this._emitter = new emitter;
+		this.vars     = {};
 		this.onInit();
+		this.trigger('init');
 	};
 
 	fn.prototype.__proto__ = ShaftController.prototype;
 
-	for(var prop in controller) {
+	for (var prop in controller) {
 		fn.prototype[prop] = controller[prop];
 	}
 
@@ -382,7 +410,6 @@ function ShaftService(app, options) {
 }
 
 ShaftService.prototype.options  = {};
-ShaftService.prototype._extend  = extend;
 ShaftService.prototype.onInit   = function() {};
 ShaftService.prototype.onStart  = function() {};
 ShaftService.prototype.onStop   = function() {};
