@@ -1,4 +1,4 @@
-var shaft = require('../../src/shaft');
+var shaft = require('shaft-js');
 
 module.exports = shaft.controller({
 	onInit : function() {

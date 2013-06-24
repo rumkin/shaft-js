@@ -2,13 +2,9 @@ var Shaft = require('shaft-js');
 
 var app = Shaft.create({
 	mode        : 'development',
-	basedir     : __dirname,
-	views       : 'views',
-	controllers : 'controllers',
-	statics     : 'ui:public',
-	service_dir : 'services',
-	services    : {
-		jade : true
+	dirs : {
+		root  : __dirname,
+		views : 'views'
 	}
 });
 
