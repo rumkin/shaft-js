@@ -267,10 +267,17 @@ Shaft.prototype.onRequest = function(req, res, next) {
 
 	controller = new controllers[call.controller](this);
 	controller.request(call, req, res, next);
+	
 	controller.on('response', function(response) {
+		if ( ! response) {
+			return next();
+		}
+
 		res.contentType(response.contentType);
 		res.send(response.response);
 	});
+
+	controller.on('error', next);
 };
 
 Shaft.prototype.onNotFound = function(req, res, next) {
