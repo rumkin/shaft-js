@@ -1,6 +1,7 @@
 var jade = require('jade');
 var fs   = require('fs');
 var path = require('path');
+var _    = require('blank-js');
 
 
 module.exports = {
@@ -23,13 +24,13 @@ module.exports = {
 
 			var compiled, html, options, locals;
 
-			options = this._extend({}, this.options, {
+			options = _.extend({}, this.options, {
 				filename : file
 			});
 
 			try {
 				compiled  = jade.compile(data.toString(), this.options);
-				variables = this._extend({}, this._helpers, variables, {
+				variables = _.extend({}, this._helpers, variables, {
 					basedir : this.app.config.dirs.root + '/' + this.app.config.dirs.views
 				});
 
