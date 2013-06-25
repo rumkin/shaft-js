@@ -148,6 +148,22 @@ Shaft.prototype.initControllers = function() {
 };
 
 Shaft.prototype.initEvents = function() {
+	this.initEventsFromConfig();
+	this.initEventsFromFiles();
+}
+
+Shaft.prototype.initEventsFromConfig = function() {
+	var events, event;
+
+	events = this.config.events;
+	for (event in events) {
+		if ( ! evetns.hasOwnProperty(event)) continue;
+
+		this.on(event, events[event]);
+	}
+};
+
+Shaft.prototype.initEventsFromFiles = function() {
 	var config, dir, files, file, event, stat, ext, name;
 
 	config = this.config;
