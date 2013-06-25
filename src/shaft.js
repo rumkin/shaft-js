@@ -75,9 +75,13 @@ Shaft.prototype.config = {
 		statics     : ['ui','public'],
 		events      : 'events',
 	},
-	services    : {
+	
+	events   : {},
+	
+	services : {
 		jade : true
 	},
+
 	defaultController : ShaftController
 }
 
@@ -437,9 +441,11 @@ ShaftController.prototype.beforeRequest = function() {};
 ShaftController.create = createController;
 
 function createController (controller, defaultController) {
-	if ( ! defaultController) defaultController = ShaftController;
+	if ( ! defaultController) defaultController = this;
 	
-	var fn = function(app) {
+	var fn, prop;
+
+	fn = function(app) {
 		this.app      = app;
 		this._emitter = new emitter;
 		this.vars     = {};
@@ -449,8 +455,16 @@ function createController (controller, defaultController) {
 
 	fn.prototype.__proto__ = defaultController.prototype;
 
-	for (var prop in controller) {
-		fn.prototype[prop] = controller[prop];
+	for (prop in controller) {
+		if (controller.hasOwnProperty(prop)) {
+			fn.prototype[prop] = controller[prop];
+		}
+	}
+
+	for (prop in defaultController) {
+		if (defaultController.hasOwnProperty(prop)) {
+			fn[prop] = defaultController[prop];
+		}
 	}
 
 	return fn;
@@ -475,7 +489,8 @@ ShaftService.create = createService;
 
 
 function createService(service) {
-	var fn = function(app, options) {
+	var fn, prop;
+	fn = function(app, options) {
 		this.app     = app;
 		this.options = _.extend({}, this.options, options);
 
@@ -486,7 +501,20 @@ function createService(service) {
 	};
 
 	fn.prototype.__proto__ = ShaftService.prototype;
-	extend(fn.prototype, service);
+
+	// Extend prototype
+	for (prop in service) {
+		if (service.hasOwnProperty(prop)) {
+			fn.prototype[prop] = service[prop];
+		}
+	}
+
+	// Append static methods and variables
+	for (prop in this) {
+		if (this.hasOwnProperty(prop)) {
+			fn.prototype[prop] = this[prop];
+		}
+	}
 
 	return fn;
 };
