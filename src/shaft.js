@@ -275,6 +275,10 @@ Shaft.prototype.initServer = function(configure) {
 		}
 	}
 
+	this.trigger('configure', this, server);
+	this.trigger('configure:' + this.config.mode, this, server);
+	this.off('configure');
+
 	server.use(this.onRequest.bind(this));
 	server.use(this.onNotFound.bind(this));
 	server.use(this.onError.bind(this));
