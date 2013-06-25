@@ -1,6 +1,6 @@
 {
   "name": "shaft-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Shaft is pure, simple and lightweight express-based MVC framework",
   "main": "src/shaft.js",
   "scripts": {
