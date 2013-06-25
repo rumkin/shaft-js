@@ -6,7 +6,7 @@ var app = Shaft.create({
 		root  : __dirname,
 		views : 'views'
 	},
-	defaultController : Shaft.createController({
+	defaultController : Shaft.Controller.create({
 		defaultControllerAction : function() {
 			console.log('Hello there!');
 		}

@@ -434,6 +434,7 @@ ShaftController.prototype.response = function(response) {
 
 ShaftController.prototype.onInit        = function() {};
 ShaftController.prototype.beforeRequest = function() {};
+ShaftController.create = createController;
 
 function createController (controller, defaultController) {
 	if ( ! defaultController) defaultController = ShaftController;
@@ -461,24 +462,27 @@ function ShaftService(app, options) {
 	throw new Error('Shaft service is interface');
 }
 
-ShaftService.prototype.options  = {};
-ShaftService.prototype.onInit   = function() {};
-ShaftService.prototype.onStart  = function() {};
-ShaftService.prototype.onStop   = function() {};
-ShaftService.prototype.trigger  = function(event, arg1) {
+ShaftService.prototype.options = {};
+ShaftService.prototype.init    = function() {};
+ShaftService.prototype.start   = function() {};
+ShaftService.prototype.stop    = function() {};
+ShaftService.prototype.trigger = function(event, arg1) {
 	arguments[0] = this.options._name + '.' + event;
 	return this.app.trigger.apply(this.app, arguments);
 };
+
+ShaftService.create = createService;
 
 
 function createService(service) {
 	var fn = function(app, options) {
 		this.app     = app;
-		this.options = extend({}, this.options, options);
-		this.onInit();
+		this.options = _.extend({}, this.options, options);
 
-		app.once('start', this.onStart.bind(this));
-		app.once('stop', this.onStop.bind(this));
+		app.once('start', this.start.bind(this));
+		app.once('stop', this.stop.bind(this));
+
+		this.init(options);
 	};
 
 	fn.prototype.__proto__ = ShaftService.prototype;
@@ -496,5 +500,5 @@ module.exports.create = function(config) {
 	return new Shaft(config);
 };
 
-module.exports.controller       = ShaftController;
-module.exports.createController = createController;
+module.exports.Controller = ShaftController;
+module.exports.Service    = ShaftService;
