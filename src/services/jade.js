@@ -6,7 +6,7 @@ var _    = require('blank-js');
 
 module.exports = {
 
-	onInit : function() {
+	init : function() {
 		this._helpers = {};
 		this.trigger('init', this);
 	},
@@ -25,11 +25,12 @@ module.exports = {
 			var compiled, html, options, locals;
 
 			options = _.extend({}, this.options, {
-				filename : file
+				filename : filename,
+				basedir  : path.join(this.app.config.dirs.root, this.app.config.dirs.views)
 			});
 
 			try {
-				compiled  = jade.compile(data.toString(), this.options);
+				compiled  = jade.compile(data.toString(), options);
 				variables = _.extend({}, this._helpers, variables, {
 					basedir : this.app.config.dirs.root + '/' + this.app.config.dirs.views
 				});
