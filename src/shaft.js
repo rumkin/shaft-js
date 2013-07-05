@@ -1,6 +1,7 @@
 var express = require('express');
 var emitter = require('events').EventEmitter;
 var path    = require('path');
+var Domain  = require('domain');
 var fs      = require('fs');
 var _       = require('blank-js');
 
@@ -309,7 +310,7 @@ Shaft.prototype.initServer = function(configure) {
 Shaft.prototype.onRequest = function(req, res, next) {
 	console.log('Request:', req.url);
 
-	var call, controllers, controller;
+	var call, controllers, controller, domain;
 
 	controllers = this._controllers;
 	call        = convertRequest(req);
@@ -321,18 +322,26 @@ Shaft.prototype.onRequest = function(req, res, next) {
 	}
 
 	controller = new controllers[call.controller](this);
-	controller.request(call, req, res, next);
-	
-	controller.on('response', function(response) {
-		if ( ! response) {
-			return next();
-		}
-
-		res.contentType(response.contentType);
-		res.send(response.response);
+	domain = Domain.create();
+	domain.on('error', function(err){
+		next(err);
 	});
 
-	controller.on('error', next);
+	domain.run(function(err) {
+
+		controller.on('response', function(response) {
+			if ( ! response) {
+				return next();
+			}
+
+			res.contentType(response.contentType);
+			res.send(response.response);
+		});
+
+		controller.on('error', next);
+
+		controller.request(call, req, res, next);
+	});
 };
 
 Shaft.prototype.onNotFound = function(req, res, next) {
