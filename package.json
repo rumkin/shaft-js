@@ -1,11 +1,10 @@
 {
   "name": "shaft-js",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Shaft is pure, simple and lightweight express-based MVC framework",
   "main": "src/shaft.js",
   "scripts": {
-    "test"    : "node tests/main.js",
-    "install" : "bash bin/install.sh"
+    "test"    : "node tests/main.js"
   },
   "dependencies" : {
     "blank-js" : "*",
