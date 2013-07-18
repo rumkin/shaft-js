@@ -270,9 +270,14 @@ Shaft.prototype.findService = function(name) {
 Shaft.prototype.initServer = function(configure) {
 	var config, server, statics, dir, mode;
 
+
 	config = this.config;
 	server = express();
 	statics = config.dirs.statics;
+
+	this.trigger('configure', this, server);
+	this.trigger('configure:' + this.config.mode, this, server);
+	this.off('configure');
 
 	if (typeof statics === 'string') {
 		statics = statics.split(':');
@@ -295,10 +300,6 @@ Shaft.prototype.initServer = function(configure) {
 			configure[mode](this, server);
 		}
 	}
-
-	this.trigger('configure', this, server);
-	this.trigger('configure:' + this.config.mode, this, server);
-	this.off('configure');
 
 	server.use(this.onRequest.bind(this));
 	server.use(this.onNotFound.bind(this));
@@ -323,9 +324,7 @@ Shaft.prototype.onRequest = function(req, res, next) {
 
 	controller = new controllers[call.controller](this);
 	domain = Domain.create();
-	domain.on('error', function(err){
-		next(err);
-	});
+	domain.on('error', next);
 
 	domain.run(function(err) {
 
