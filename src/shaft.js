@@ -5,6 +5,7 @@ var path = require('path');
 
 // Owned dependencies
 var Controller = require('./controller.js');
+var Service    = require('./service.js');
 
 function Shaft(config) {
 	this.config       = _.extendDeep({}, this.config, config);
@@ -15,6 +16,8 @@ function Shaft(config) {
 Shaft.prototype.config = {
 	root_dir        : path.dirname(require.main.filename),
 	controllers_dir : 'controllers',
+	services_dir    : 'services',
+	views_dir       : 'views',
 	controllers     : {},
 	services        : {}
 };
@@ -28,6 +31,68 @@ Shaft.prototype.use = function() {
 			next();
 		}
 	}.bind(this);
+};
+
+Shaft.prototype.getService = function(name, callback) {
+	if ( ! this.services.hasOwnProperty(name)) {
+		var module = this.findService(name);
+		try {
+			if ( ! module) {
+				throw new Error('Service "' + name + '" not found');
+			}
+			if (typeof module !== 'function') {
+				throw new Error('Service is not a function');
+			}
+
+			this.services[name] = new module(this, this.config.services[name] || {});
+		} catch (err) {
+			if (callback) {
+				return callback(err);
+			} else {
+				throw err;
+			}
+
+		}
+	}
+	var service = this.services[name];
+	if (callback) {
+		if (service.ready) {
+			callback(null, service)
+		} else {
+			service.once('ready', function() {
+				callback(null, service);
+			});
+		}
+	}
+
+	return service;
+};
+
+Shaft.prototype.findService = function(name) {
+	var config = this.config;
+	var locations, location, index, length, service_dir;
+	service_dir = path.resolve(config.root_dir, config.services_dir);
+	locations = [
+		service_dir + '/' + name,
+		service_dir + '/' + name + '/' + name + '.js',
+		'shaft-' + name,
+		__dirname + '/services/' + name
+	];
+	index  = -1;
+	length = locations.length;
+	while (++index < length) {
+		location = locations[index];
+		try {
+			location = require.resolve(location);
+		} catch (err) {
+			continue;
+		}
+		var module = require(location);
+		if (typeof module === 'object') {
+			module = Service.extend(module);
+		}
+		return module;
+	}
 };
 
 Shaft.prototype.route = function(url) {

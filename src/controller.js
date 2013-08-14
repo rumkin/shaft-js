@@ -30,6 +30,10 @@ Controller.prototype.request = function(req, res, next) {
 
 Controller.prototype.before = function() {};
 
+Controller.prototype.getService = function(module, callback) {
+	return this.app.getService(module, callback);
+};
+
 Controller.extend = function(object) {
 	var that = this;
 	var fn = function() {
