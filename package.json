@@ -1,16 +1,16 @@
 {
   "name": "shaft-js",
-  "version": "0.1.4",
-  "description": "Shaft is pure, simple and lightweight express-based MVC framework",
+  "version": "0.3",
+  "description": "Shaft is pure, simple and lightweight express-based SCV (service-controller-view) framework",
   "main": "src/shaft.js",
   "scripts": {
     "test"    : "node tests/main.js"
   },
   "dependencies" : {
-    "blank-js" : "*",
-    "express": "*",
-    "jade"   : "*",
-    "lodash" : "*"
+    "blank-js": "*",
+    "express" : "*",
+    "jade"    : "*",
+    "occur"   : "*"
   },
   "repository" : {
     "type" : "git",
