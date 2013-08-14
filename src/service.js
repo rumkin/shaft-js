@@ -19,7 +19,7 @@ Service.prototype.init = function(config) {
 
 _.mixin(Service, occur);
 
-Service.prototype.once    = function(event, callback) {
+Service.prototype.once = function(event, callback) {
 	var that = this;
 	var once = function() {
 		callback.apply(null, arguments);

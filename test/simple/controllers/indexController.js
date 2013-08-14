@@ -12,6 +12,9 @@ module.exports = {
 	},
 	renderAction : function() {
 		this.view.title = 'there';
+		this.frontend('index/render', {
+			params : true
+		});
 		this.render('index/index');
 	}
 }

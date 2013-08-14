@@ -1,5 +1,15 @@
 html
   head
     title=title
+    script(src='/test.js')
+    if requireJs
+      script(src='/lib/requirejs/require.js')
+      script
+        require.config({baseUrl:'/'})
+        require(['app/app'], function(app) {
+          app(!{_.json('app/' + requireJs.controller)}, !{_.json(requireJs.params || {})})
+        });
   body
-  block content
+    div(ui='main')
+    block content
+    != _.url('http://www.yandex.ru')
