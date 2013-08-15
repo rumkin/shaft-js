@@ -1,5 +1,9 @@
 module.exports = {
 	extend : 'base',
+	/**
+	 * Default frontend application controller
+	 * @type {String}
+	 */
 	indexAction : function() {
 		this.res.end('THERE');
 	},

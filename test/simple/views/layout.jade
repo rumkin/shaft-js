@@ -1,15 +1,16 @@
 html
   head
     title=title
-    script(src='/test.js')
+    link(rel='stylesheet',href='/lib/pure/build/pure-min.css')
+    link(rel='stylesheet',href='/main.css')
     if requireJs
       script(src='/lib/requirejs/require.js')
-      script
+      script.
         require.config({baseUrl:'/'})
-        require(['app/app'], function(app) {
-          app(!{_.json('app/' + requireJs.controller)}, !{_.json(requireJs.params || {})})
+        require(['app/' + (!{_.json(requireJs.app)} || 'app')], function(app) {
+          app(!{_.json(requireJs.params || {})})
         });
   body
-    div(ui='main')
+    div(ui='app')
     block content
     != _.url('http://www.yandex.ru')

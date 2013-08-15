@@ -7,20 +7,10 @@ module.exports = {
 		this.view = {};
 	},
 
-	// hasRequireJsController : function() {
-	// 	var controller = this.constructor._name + '/' + this.url.split('/').slice(2).shift();
-	// 	var path = this.app.config.root_dir + '/' + this.app.config.ui_dir '/' + controller + '.js';
-
-	// 	if (requirejs[controller]) {
-
-	// 	}
-	// },
-	
-	// Frontend controller intialization
-	frontend : function(controller, params) {
+	frontend : function(app, params) {
 		this.view.requireJs = {
-			controller : controller,
-			params     : params
+			app    : app,
+			params : params
 		};
 	},
 
