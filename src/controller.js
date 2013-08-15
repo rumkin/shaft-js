@@ -16,7 +16,7 @@ Controller.prototype.request = function(req, res, next) {
 	this.before();
 
 	// route action
-	var action = req.url.split(/\//).slice(2).shift() || 'index';
+	var action = this.url.pathname.split('/').slice(2).shift() || 'index';
 	var method = _.toCamelCase(action) + 'Action';
 	if ( typeof this[method] !== 'function') {
 		return next();

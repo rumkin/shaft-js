@@ -96,8 +96,8 @@ Shaft.prototype.findService = function(name) {
 };
 
 Shaft.prototype.route = function(url) {
-	var path = URL.parse(url).path;
-	var controller = path.split(/\//).slice(1).shift();
+	var path = URL.parse(url).pathname;
+	var controller = path.split(/\//).slice(1).shift() || 'index';
 
 	return this.findController(controller);
 };
