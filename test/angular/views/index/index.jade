@@ -1,0 +1,29 @@
+extends /layout.jade
+block content
+
+  div.vpo-menubar(ng-controller='menuCtrl')
+    div#menu.pure-menu.pure-menu-open
+      a.pure-menu-heading(href='/') {{name}}
+      ul
+        li(ng-repeat="item in menu")
+          <a href="{{item.url}}">{{item.label}}</a>
+
+  div.vpo-view(ng-view='')
+  script(type='text/ng-template',id='index-render.html').
+    <form class="pure-form">
+      <input type='text' ng-model="username" placeholder="username of vk.com"/>
+      <button class="pure-button pure-button-primary" ng-click="getAlbums()">Go</button>
+    </form>
+    <h1>Albums</h1>
+    <ul class='vpo-albums'>
+      <li class='vpo-albums-album' ng-repeat='album in albums'>
+        <img src='{{album.thumb.src}}'/>
+      </li>
+    </ul>
+  script(type='text/ng-template',id='index-try.html').
+    <h1>Nice try</h1>
+  script(type='text/ng-template',id='index-error.html').
+    <div class="vpo-error">
+      <h1>{{ error.code }}</h1>
+      <p>{{ error.message }}</p>
+    </div>
