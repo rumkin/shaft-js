@@ -6,7 +6,8 @@ app.config(function($routeProvider, $locationProvider) {
 		.when('/', {controller:indexRenderCtrl, templateUrl:'index-render.html'})
 		.when('/index', {controller:indexRenderCtrl, templateUrl:'index-render.html'})
 		.when('/index/index', {controller:indexRenderCtrl, templateUrl:'index-index.html'})
-		.when('/try', {controller:tryCtrl, templateUrl:'index-try.html'})
+		.when('/try/:what', {controller:tryCtrl, templateUrl:'index-try.html'})
+		.when('/try/', {controller:tryCtrl, templateUrl:'index-try.html'})
 		.otherwise({controller:noWayCtrl, templateUrl:'index-error.html'})
 		;
 });
@@ -42,7 +43,9 @@ function indexRenderCtrl($scope) {
 	};
 }
 
-function tryCtrl($scope) {}
+function tryCtrl($scope, $routeParams) {
+	$scope.what = $routeParams.what || 'nothing';
+}
 
 function noWayCtrl ($scope) {
 	$scope.error = {
