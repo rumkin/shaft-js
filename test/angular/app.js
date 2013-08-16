@@ -20,15 +20,14 @@ app.use(function(req, res, next) {
 app.use(less(__dirname + '/ui/'))
 app.use(express.static(__dirname + '/ui/'))
 app.use(shaft.use());
-app.use(function(err, req, res, next) {
-	console.log('>####<');
-	if (! err && req.url !== '/') {
+app.use(function(req, res, next) {
+	if (['/','/index'].indexOf(req.url) < 0) {
 		res.setHeader('location', '/#' + req.url);
 		res.statusCode = 301;
 		res.end();
-		return
+	} else {
+		next();
 	}
-	next(err);
 });
 app.use(express.logger('short'));
 app.listen(8080);
